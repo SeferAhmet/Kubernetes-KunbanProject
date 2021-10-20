@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kanban-app-backend-deployment
+spec:
+  selector:
+    matchLabels:
+      app: kanban-app-backend
+  template:
+    metadata:
+      labels:
+        app: kanban-app-backend
+    spec:
+      containers:
+      - name: kanban-app-backend
+        image: 3808544/kanban-board_kanban-app
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: postgres-cm
+        env:
+          - name: DB_SERVER
+            value: posgres-svc      
+
