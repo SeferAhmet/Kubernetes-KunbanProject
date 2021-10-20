@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:9.6-alpine
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: postgres-cm
+        volumeMounts:
+          - name: postgres-volume
+            mountPath: /var/lib/postgresql/data
+
+      volumes:
+        - name: postgres-volume
+          persisteentvolumeClain:
+            claimName: postgres-vpc
